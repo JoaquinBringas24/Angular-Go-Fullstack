@@ -1,0 +1,16 @@
+$colors: (
+"palette-1": #F2138E,
+"palette-2": #961BA6,
+"palette-3": #6F23D9,
+"palette-4": #2E27F2,
+"palette-5": #0D0D0D,
+);          
+
+h1 {
+    color:map-get($map:$colors, $key:palette-5);
+}
+
+body {
+    background-color: map-get($map: $colors, $key:palette-5);
+    margin: 0;
+}

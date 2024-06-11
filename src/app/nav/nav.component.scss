@@ -1,0 +1,125 @@
+$colors: (
+"palette-1": #F2138E,
+"palette-2": #961BA6,
+"palette-3": #6F23D9,
+"palette-4": #2E27F2,
+"palette-5": #0D0D0D,
+);         
+
+.top-nav {
+    ul {
+        background-color: white;
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: center;
+        padding: 10px 0px;
+        margin: 0;
+
+        form {
+            padding: 10px;
+            margin: 0px 10px;
+
+            input {
+                background-color: none;
+                min-width: 300px;
+                margin: 0px 0px;
+                border: 1px black solid;
+                padding-top: 3.5px;
+            }
+
+            button {
+                padding-bottom: 2px;
+                padding-top: 1px;
+                border-radius: 0px;
+                border: 1px black solid;
+                background-color: white;
+                color: black;
+                z-index: 1;
+                position: relative;
+                overflow: hidden;
+                transition: all 200ms;
+                font-family: 'Segoe UI';
+                font-size: smaller;
+                
+                &:before {
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                z-index: -1;
+                position: absolute;
+                content: "";
+                background-color: black;
+                border-radius: 0px;
+                transform: translateX(-100%);
+                transition: all 1s;
+            }
+
+                &:hover {
+                    color: white;
+
+                    &::before {
+                        transform: translateX(0%);
+                    }
+                }
+
+
+            }
+
+           
+        }
+
+        svg {
+            padding: 11px;
+            list-style: none;
+        }
+
+        li {
+            text-decoration: none;
+            list-style: none;
+            padding: 9px;
+
+            a {
+                text-decoration: none;
+                font-family: 'Segoe UI';
+                color: black;
+                transition: all 200ms;
+                &:hover {
+                    font-weight: bold;
+                }
+            }
+        }
+    }
+}
+
+.bottom-nav {
+    margin: 10px 0px;
+    background-color: white;
+    padding: 3px;
+    ul {
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+
+        li {
+            margin: 0px 50px;
+            list-style: none;
+
+
+
+            
+            a {
+                text-decoration: none;
+                color: black;            
+                transition: all 100ms ease-in;
+                            
+                &:hover {
+                border: 2px solid black;
+                border-radius: 2px;
+                padding: 5px 10px;
+            }
+            }
+        }
+    }
+}
