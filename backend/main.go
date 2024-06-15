@@ -6,18 +6,21 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"strconv"
 
+	"github.com/lib/pq"
 	_ "github.com/lib/pq"
 )
 
 type Item struct {
-	Name        string  `json:"name"`
-	Description string  `json:"description"`
-	Terms       string  `json:"terms"`
-	Sku         string  `json:"sku"`
-	Price       float32 `json:"price"`
-	Images      string  `json:"images"`
-	Section     string  `json:"section"`
+	Index       int32    `json:"index"`
+	Name        string   `json:"name"`
+	Description string   `json:"description"`
+	Terms       string   `json:"terms"`
+	Sku         string   `json:"sku"`
+	Price       float32  `json:"price"`
+	Images      []string `json:"images"`
+	Section     string   `json:"section"`
 }
 
 type Query struct {
@@ -39,8 +42,15 @@ func main() {
 
 	// Handlers
 
-	http.HandleFunc("/start", func(w http.ResponseWriter, r *http.Request) {
-		data, err := getAllRows(conn)
+	http.HandleFunc("/api/get", func(w http.ResponseWriter, r *http.Request) {
+		id := r.URL.Query().Get("id")
+
+		parsedID, err := strconv.Atoi(id)
+		if err != nil {
+			fmt.Println(err)
+		}
+
+		data, err := getRows(conn, parsedID)
 		if err != nil {
 			fmt.Println(err)
 		}
@@ -55,8 +65,8 @@ func main() {
 
 }
 
-func getAllRows(conn *sql.DB) ([]byte, error) {
-	rows, err := conn.Query("select * from zara limit 9")
+func getRows(conn *sql.DB, num int) ([]byte, error) {
+	rows, err := conn.Query(fmt.Sprintf("select * from zara where index > %v order by index limit 10", num))
 	if err != nil {
 		log.Println(err)
 		return nil, err
@@ -66,21 +76,20 @@ func getAllRows(conn *sql.DB) ([]byte, error) {
 
 	var name, description, terms, section, sku string
 	var price float32
-	var images string
+	var images []string
+	var index int32
 
 	var data []Item
 
 	for rows.Next() {
 
-		err := rows.Scan(&sku, &name, &description, &price, &images, &terms, &section)
+		err := rows.Scan(&index, &sku, &name, &description, &price, pq.Array(&images), &terms, &section)
 		if err != nil {
 			log.Println(err)
 			return nil, err
 		}
 
-		fmt.Println("Record is", sku, name, description, price, images, terms, section)
-
-		row := Item{Sku: sku, Name: name, Description: description, Price: price, Images: images, Terms: terms, Section: section}
+		row := Item{Index: index, Sku: sku, Name: name, Description: description, Price: price, Images: images, Terms: terms, Section: section}
 
 		data = append(data, row)
 
@@ -91,7 +100,7 @@ func getAllRows(conn *sql.DB) ([]byte, error) {
 		return nil, err
 	}
 
-	fmt.Println("-----------------------------------")
+	fmt.Println("----------------DONE-GET------------------")
 
 	return json.Marshal(data)
 
